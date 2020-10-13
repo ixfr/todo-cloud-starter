@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  todo-postgres:
+    image: jtick/todo-postgres:1.0
+
+  todo-elastic:
+    container_name: todo-elastic
+    image: elasticsearch:6.6.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+
+  todo-cache-ingestion:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-cache-ingestion:1.0.0
+
+  todo-cache-service:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-cache-service:1.0.0
+
+  todo-search-ingestion:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-search-ingestion:1.0.0
+    command: sh /home/node/app/start.sh
+
+  todo-search-service:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-search-service:1.0.0
+    command: sh /home/node/app/start.sh
+
+  todo-storage-ingestion:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-storage-ingestion:1.0.0
+    command: sh /home/node/app/start.sh
+
+  todo-storage-service:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-storage-service:1.0.0
+
+  todo-api-gateway:
+    build:
+      dockerfile: ../Dockerfile.nodejs.prod
+    image: jtick/todo-api-gateway:1.0.0
+    command: sh /home/node/app/start.sh
+
+  todo-view:
+    build:
+      dockerfile: Dockerfile.prod
+    image: jtick/todo-view:1.0.0
+    ports:
+      - 4201:8080
+
+  todo-proxy:
+    image: jtick/todo-proxy:1.0.0
+
