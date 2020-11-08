@@ -1,0 +1,3 @@
+docker build ./todo-api-gateway -f Dockerfile.nodejs.prod -t jtick/todo-api-gateway:1.0.0
+docker login
+docker push jtick/todo-api-gateway:1.0.0
