@@ -35,7 +35,8 @@ script:
 after_success:
   # Build Production Images for deployment
   - docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
-
+  - echo "authenticating in dockerhub with ID $DOCKER_HUB_ID"
+  - echo "authenticating in dockerhub with PASS $DOCKER_HUB_PASSWORD"
   # Login to Docker Hub
   - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
 
